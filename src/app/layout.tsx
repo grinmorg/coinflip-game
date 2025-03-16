@@ -7,6 +7,7 @@ import "./globals.css";
 import QueryClientProvider from "@/context/query-client-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import WagmiContextProvider from "@/context/wagmi/provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,9 +35,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <TooltipProvider>
-          <QueryClientProvider>
-            {children}
-          </QueryClientProvider>
+          <WagmiContextProvider>
+            <QueryClientProvider>
+              {children}
+            </QueryClientProvider>
+          </WagmiContextProvider>
         </TooltipProvider>
         <Toaster richColors />
       </body>
