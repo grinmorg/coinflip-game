@@ -45,7 +45,7 @@ export default function Example() {
   const [activeTab, setActiveTab] =
     useState("create");
   const [betAmount, setBetAmount] =
-    useState("0.0001");
+    useState("0.01");
   const [choice, setChoice] =
     useState<bigint>(0n); // 0 - орёл, 1 - решка
   const [
@@ -178,7 +178,7 @@ export default function Example() {
   //   };
 
   return (
-    <main className='min-h-screen bg-gray-100'>
+    <main className='min-h-screen '>
       <div className='container mx-auto px-4 py-8'>
         {/* Header */}
         <div className='flex justify-between items-center mb-6'>
