@@ -1,27 +1,32 @@
 import {
-  http,
-  createConfig,
+  cookieStorage,
+  createStorage,
 } from "wagmi";
-import {
-  // mainnet,
-  sepolia,
-} from "wagmi/chains";
-import {
-  //   injected,
-  metaMask,
-  //   safe,
-} from "wagmi/connectors";
+import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+import { sepolia } from "@reown/appkit/networks";
+import { APPKIT_PROJECT_ID } from "@/lib/constants/appkit";
 
-export const config = createConfig({
-  // mainnet,
-  chains: [sepolia],
-  connectors: [
-    // injected(),
-    metaMask(),
-    // safe(),
-  ],
-  transports: {
-    // [mainnet.id]: http(),
-    [sepolia.id]: http(),
-  },
-});
+export const projectId =
+  APPKIT_PROJECT_ID;
+
+if (!projectId) {
+  throw new Error(
+    "Project ID is not defined"
+  );
+}
+
+export const networks = [sepolia];
+
+//Set up the Wagmi Adapter (Config)
+export const wagmiAdapter =
+  new WagmiAdapter({
+    storage: createStorage({
+      storage: cookieStorage,
+    }),
+    ssr: true,
+    projectId,
+    networks,
+  });
+
+export const config =
+  wagmiAdapter.wagmiConfig;

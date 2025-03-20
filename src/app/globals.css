@@ -82,6 +82,7 @@
 }
 
 :root {
+  --radius: 0.625rem;
   --background: oklch(
     0.129 0.042 264.695
   );
@@ -149,6 +150,16 @@
   );
   --sidebar-ring: oklch(
     0.446 0.043 257.281
+  );
+  --radius-sm: calc(
+    var(--radius) - 4px
+  );
+  --radius-md: calc(
+    var(--radius) - 2px
+  );
+  --radius-lg: var(--radius);
+  --radius-xl: calc(
+    var(--radius) + 4px
   );
 }
 

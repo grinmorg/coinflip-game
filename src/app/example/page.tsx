@@ -19,7 +19,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { ConnectWallet } from "@/components/wagmi/connect-wallet";
+import { ConnectButton } from "@/components/wagmi/connect-button";
 import { CoinFlipABI } from "@/lib/constants/abi-coin-flip";
 import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
 import { useState } from "react";
@@ -186,7 +186,7 @@ export default function Example() {
             Coin Flip
           </h1>
           <div>
-            <ConnectWallet />
+            <ConnectButton />
           </div>
         </div>
 
