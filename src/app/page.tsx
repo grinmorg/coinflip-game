@@ -6,28 +6,7 @@ export default function Home() {
     <main className='min-h-screen'>
       <div className='container mx-auto px-2 pb-10'>
         <CoinFlipGameSection />
-        <PlayersListSection
-          players={[
-            {
-              id: "1",
-              nickname: "PlayerOne",
-              amount: 1000,
-              position: "Heads",
-            },
-            {
-              id: "2",
-              nickname: "CryptoKing",
-              amount: 2500,
-              position: "Tails",
-            },
-            {
-              id: "3",
-              nickname: "GameMaster",
-              amount: 500,
-              position: "Heads",
-            },
-          ]}
-        />
+        <PlayersListSection />
       </div>
     </main>
   );

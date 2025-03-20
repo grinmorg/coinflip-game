@@ -19,7 +19,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { ConnectButton } from "@/components/wagmi/connect-button";
 import { CoinFlipABI } from "@/lib/constants/abi-coin-flip";
 import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
 import { useState } from "react";
@@ -180,16 +179,6 @@ export default function Example() {
   return (
     <main className='min-h-screen '>
       <div className='container mx-auto px-4 py-8'>
-        {/* Header */}
-        <div className='flex justify-between items-center mb-6'>
-          <h1 className='text-3xl font-bold'>
-            Coin Flip
-          </h1>
-          <div>
-            <ConnectButton />
-          </div>
-        </div>
-
         {/* Tabs */}
         <Tabs
           value={activeTab}
