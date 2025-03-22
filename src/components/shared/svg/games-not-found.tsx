@@ -23,7 +23,7 @@ export const GamesNotFoundImage: React.FC<
         fill='url(#paint0_linear_749_3)'
         d='M545 272.5C545 422.998 422.998 545 272.5 545S0 422.998 0 272.5 122.002 0 272.5 0 545 122.002 545 272.5'></path>
       <path
-        fill='#d6e2fb'
+        fill='#fbe8d6'
         fillRule='evenodd'
         d='M367.45 194.57c-5.855 4.538-12.583 8.93-19.992 8.93H173.042c-7.409 0-14.137-4.392-19.992-8.93-4.332-3.358-10.275-6.406-17.866-7.57a44 44 0 0 0-6.684-.5c-19.1 0-41.171 3.633-59.237 22.71-4.162 4.395-8.112 9.611-11.763 15.79-8.531 14.438-26.346 59.117-38.873 110.257-3.907 15.952-7.3 32.532-9.736 49.019-5.375 36.369-6.093 72.284 2.59 99.997C15.085 495.781 20.312 505.875 27.5 514c5.75 6.5 11.565 10.531 17.377 12.493C85.56 540.227 126.083 452.562 143 400.5l.024.018C154.683 409.176 166.514 416 187 416c20.5 0 49-15.5 52-36.5h42.5c3 21 31.5 36.5 52 36.5 20.472 0 32.301-6.815 43.952-15.464l.048-.036a447 447 0 0 0 8.627 24.093C409.31 484.031 452.75 559.5 493 514c57.5-65-10.5-256-30-289-17.264-29.217-41.192-36.877-62.76-38.25-2.793-.178-5.546-.25-8.24-.25-2.715 0-5.261.236-7.64.658-7.135 1.265-12.761 4.196-16.91 7.412'
         clipRule='evenodd'></path>
@@ -38,13 +38,13 @@ export const GamesNotFoundImage: React.FC<
         d='M367.45 194.57c-5.855 4.538-12.583 8.93-19.992 8.93H173.042c-7.409 0-14.137-4.392-19.992-8.93-4.332-3.358-10.275-6.406-17.866-7.57a44 44 0 0 0-6.684-.5c-19.1 0-41.171 3.633-59.237 22.71-4.162 4.395-8.112 9.611-11.763 15.79-8.531 14.438-26.346 59.117-38.873 110.257-3.907 15.952-7.3 32.532-9.736 49.019-5.375 36.369-6.093 72.284 2.59 99.997C15.085 495.781 20.312 505.875 27.5 514c5.75 6.5 11.565 10.531 17.377 12.493C85.56 540.227 126.083 452.562 143 400.5l.024.018C154.683 409.176 166.514 416 187 416c20.5 0 49-15.5 52-36.5h42.5c3 21 31.5 36.5 52 36.5 20.472 0 32.301-6.815 43.952-15.464l.048-.036a447 447 0 0 0 8.627 24.093C409.31 484.031 452.75 559.5 493 514c57.5-65-10.5-256-30-289-17.264-29.217-41.192-36.877-62.76-38.25-2.793-.178-5.546-.25-8.24-.25-2.715 0-5.261.236-7.64.658-7.135 1.265-12.761 4.196-16.91 7.412'
         clipRule='evenodd'></path>
       <path
-        fill='#d6e2fb'
+        fill='#fbe8d6'
         d='M303 335c0 17.121 15.67 31 35 31s35-13.879 35-31-15.67-31-35-31-35 13.879-35 31'></path>
       <path
         fill='url(#paint3_linear_749_3)'
         d='M303 335c0 17.121 15.67 31 35 31s35-13.879 35-31-15.67-31-35-31-35 13.879-35 31'></path>
       <path
-        fill='#d6e2fb'
+        fill='#fbe8d6'
         d='M309 323.5c0 15.74 14.327 28.5 32 28.5s32-12.76 32-28.5-14.327-28.5-32-28.5-32 12.76-32 28.5'></path>
       <path
         fill='url(#paint4_linear_749_3)'
@@ -109,18 +109,18 @@ export const GamesNotFoundImage: React.FC<
         fill='#fff'
         d='M87 262a2 2 0 0 1-2-2v-21a2 2 0 0 1 2-2h16.644a2 2 0 0 1 1.601.802l7.858 10.5c.532.71.532 1.686 0 2.396l-7.858 10.5a2 2 0 0 1-1.601.802z'></path>
       <path
-        fill='#2563eb'
+        fill='#eb9325'
         fillRule='evenodd'
         d='M143.003 400.501zc-5-4.5-14.8-17.1-14-31.5-11 24.5-38.1 80.3-58.5 107.5-17.918 23.892-37.071 29.76-50 28.015 2.091 3.398 4.419 6.569 6.999 9.485 5.75 6.5 11.565 10.531 17.377 12.493 40.682 13.734 81.206-73.931 98.123-125.993zM499.957 504.583c-12.917 1.511-31.788-4.523-49.458-28.083C430.099 449.3 403 393.5 392 369c.8 14.4-9 27-14 31.5l.105 1.844a452 452 0 0 0 8.023 22.249C409.311 484.031 452.751 559.5 493.001 514c2.563-2.897 4.876-6.044 6.956-9.417'
         clipRule='evenodd'></path>
       <path
-        fill='#d6e2fb'
+        fill='#fbe8d6'
         d='M217 335c0 17.121-15.67 31-35 31s-35-13.879-35-31 15.67-31 35-31 35 13.879 35 31'></path>
       <path
         fill='url(#paint13_linear_749_3)'
         d='M217 335c0 17.121-15.67 31-35 31s-35-13.879-35-31 15.67-31 35-31 35 13.879 35 31'></path>
       <path
-        fill='#d6e2fb'
+        fill='#fbe8d6'
         d='M211 323.5c0 15.74-14.327 28.5-32 28.5s-32-12.76-32-28.5 14.327-28.5 32-28.5 32 12.76 32 28.5'></path>
       <path
         fill='url(#paint14_linear_749_3)'
@@ -144,7 +144,7 @@ export const GamesNotFoundImage: React.FC<
         d='M157.044 197.502 157 197.5c7 6.333 22.3 24.4 27.5 46 6.5 27 9.5 31.5 17 31.5H319c7.5 0 10.5-4.5 17-31.5 5.2-21.6 20.5-39.667 27.5-46l-.044.002c-4.858 3.328-10.221 5.998-15.997 5.998H173.042c-5.777 0-11.14-2.67-15.998-5.998'
         clipRule='evenodd'></path>
       <path
-        fill='#2563eb'
+        fill='#eb9325'
         fillRule='evenodd'
         d='M237.501 335.516c-.506 16.181-11.613 38.793-36.302 49.443-20.602 8.887-42.543 1.349-50.949-3.526l.502-.866c8.26 4.792 29.853 12.187 50.051 3.474 24.311-10.487 35.204-32.738 35.698-48.557zM282.906 335.516c.505 16.181 11.612 38.793 36.301 49.443 20.603 8.887 42.543 1.349 50.949-3.526l-.501-.866c-8.261 4.792-29.854 12.187-50.052 3.474-24.31-10.487-35.204-32.738-35.698-48.557z'
         clipRule='evenodd'></path>
@@ -235,10 +235,10 @@ export const GamesNotFoundImage: React.FC<
           y1='528'
           y2='268'
           gradientUnits='userSpaceOnUse'>
-          <stop stopColor='#9ab7f6'></stop>
+          <stop stopColor='#f6c49a'></stop>
           <stop
             offset='1'
-            stopColor='#9ab7f6'
+            stopColor='#f6c49a'
             stopOpacity='0'></stop>
         </linearGradient>
         <linearGradient
@@ -262,10 +262,10 @@ export const GamesNotFoundImage: React.FC<
           y1='352.5'
           y2='346.064'
           gradientUnits='userSpaceOnUse'>
-          <stop stopColor='#9ab7f6'></stop>
+          <stop stopColor='#f6c49a'></stop>
           <stop
             offset='1'
-            stopColor='#9ab7f6'
+            stopColor='#f6c49a'
             stopOpacity='0'></stop>
         </linearGradient>
         <linearGradient
@@ -290,11 +290,11 @@ export const GamesNotFoundImage: React.FC<
           y2='305.5'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint6_linear_749_3'
@@ -304,11 +304,11 @@ export const GamesNotFoundImage: React.FC<
           y2='279.5'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint7_linear_749_3'
@@ -318,11 +318,11 @@ export const GamesNotFoundImage: React.FC<
           y2='279.5'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint8_linear_749_3'
@@ -332,11 +332,11 @@ export const GamesNotFoundImage: React.FC<
           y2='252.5'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint9_linear_749_3'
@@ -346,11 +346,11 @@ export const GamesNotFoundImage: React.FC<
           y2='203.828'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint10_linear_749_3'
@@ -360,11 +360,11 @@ export const GamesNotFoundImage: React.FC<
           y2='300.172'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint11_linear_749_3'
@@ -374,11 +374,11 @@ export const GamesNotFoundImage: React.FC<
           y2='251.5'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint12_linear_749_3'
@@ -388,11 +388,11 @@ export const GamesNotFoundImage: React.FC<
           y2='251.5'
           gradientUnits='userSpaceOnUse'>
           <stop
-            stopColor='#2563eb'
+            stopColor='#eb9325'
             stopOpacity='0'></stop>
           <stop
             offset='1'
-            stopColor='#2563eb'></stop>
+            stopColor='#eb9325'></stop>
         </linearGradient>
         <linearGradient
           id='paint13_linear_749_3'
@@ -401,10 +401,10 @@ export const GamesNotFoundImage: React.FC<
           y1='352.5'
           y2='346.064'
           gradientUnits='userSpaceOnUse'>
-          <stop stopColor='#9ab7f6'></stop>
+          <stop stopColor='#f6c49a'></stop>
           <stop
             offset='1'
-            stopColor='#9ab7f6'
+            stopColor='#f6c49a'
             stopOpacity='0'></stop>
         </linearGradient>
         <linearGradient
@@ -428,10 +428,10 @@ export const GamesNotFoundImage: React.FC<
           y1='317'
           y2='358.164'
           gradientUnits='userSpaceOnUse'>
-          <stop stopColor='#9ab7f6'></stop>
+          <stop stopColor='#f6c49a'></stop>
           <stop
             offset='1'
-            stopColor='#9ab7f6'
+            stopColor='#f6c49a'
             stopOpacity='0'></stop>
         </linearGradient>
         <linearGradient
@@ -441,10 +441,10 @@ export const GamesNotFoundImage: React.FC<
           y1='317'
           y2='358.164'
           gradientUnits='userSpaceOnUse'>
-          <stop stopColor='#9ab7f6'></stop>
+          <stop stopColor='#f6c49a'></stop>
           <stop
             offset='1'
-            stopColor='#9ab7f6'
+            stopColor='#f6c49a'
             stopOpacity='0'></stop>
         </linearGradient>
         <linearGradient

@@ -1,7 +1,10 @@
 "use client";
 import { CoinFlip } from "@/components/animations/coin-flip";
 import { UserCard } from "@/components/game/user-card";
-import { cn } from "@/lib/utils";
+import {
+  cn,
+  shortenAddress,
+} from "@/lib/utils";
 import React, { useState } from "react";
 
 interface Props {
@@ -53,10 +56,6 @@ export const CoinFlipGameSection: React.FC<
   return (
     <div className={className}>
       <div className='flex flex-col items-center justify-center gap-y-2'>
-        <h1 className='mt-6 max-w-[17ch] text-4xl md:text-5xl lg:text-[2.75rem] xl:text-5xl font-bold !leading-[1.2]'>
-          Coin flip game
-        </h1>
-
         <div className='flex items-center gap-x-2 px-2'>
           <div className='flex flex-col items-center gap-y-2'>
             <p
@@ -69,7 +68,9 @@ export const CoinFlipGameSection: React.FC<
               tails
             </p>
             <UserCard
-              username='Username 01'
+              username={shortenAddress(
+                "0xD3a431a9530E9167F6994842C4Eb1962edC0855c"
+              )}
               isWin={
                 sideToLandOn ===
                   "tails" && !isPlaying
@@ -108,6 +109,7 @@ export const CoinFlipGameSection: React.FC<
                   "heads" && !isPlaying
               }
               isLoading={isPlaying}
+              isNotSelected
             />
           </div>
         </div>

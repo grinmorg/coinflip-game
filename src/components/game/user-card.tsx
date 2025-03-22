@@ -7,6 +7,7 @@ interface Props {
   username: string;
   isWin: boolean;
   isLoading: boolean;
+  isNotSelected?: boolean;
 }
 
 export const UserCard: React.FC<
@@ -15,6 +16,7 @@ export const UserCard: React.FC<
   username,
   isWin,
   isLoading,
+  isNotSelected = false,
   className,
 }) => {
   return (
@@ -23,25 +25,34 @@ export const UserCard: React.FC<
         "flex flex-col items-center justify-center",
         className
       )}>
-      <div className='rounded-full bg-teal-300 flex items-center justify-center sm:w-32 w-16 sm:h-32 h-16 relative'>
-        <div className='absolute bottom-0 sm:bottom-2 left-1/2 -translate-x-1/2'>
-          {isWin && (
-            <p className='text-white font-bold sm:text-lg bg-orange-500 px-1 sm:px-2 rounded'>
-              WIN
-            </p>
-          )}
-          {isLoading && (
-            <p className='font-bold sm:text-lg bg-white px-1 sm:px-2 rounded animate-pulse'>
-              ...
-            </p>
-          )}
-        </div>
+      <div
+        className={cn(
+          "rounded-full bg-accent flex items-center justify-center sm:w-32 w-16 sm:h-32 h-16 relative",
+          isNotSelected &&
+            "bg-transparent border-dashed border-6 border-accent opacity-50"
+        )}>
+        {!isNotSelected && (
+          <div className='absolute bottom-0 sm:bottom-2 left-1/2 -translate-x-1/2'>
+            {isWin && (
+              <p className='text-white font-bold sm:text-lg bg-orange-500 px-1 sm:px-2 rounded'>
+                WIN
+              </p>
+            )}
+            {isLoading && (
+              <p className='font-bold sm:text-lg bg-white px-1 sm:px-2 rounded animate-pulse'>
+                ...
+              </p>
+            )}
+          </div>
+        )}
         <UserIcon className='text-white sm:w-16 w-8 sm:h-16 h-8' />
       </div>
 
-      <p className='font-bold sm:text-base text-xs'>
-        {username}
-      </p>
+      {!isNotSelected && (
+        <p className='font-bold sm:text-base text-xs'>
+          {username}
+        </p>
+      )}
     </article>
   );
 };

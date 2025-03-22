@@ -1,6 +1,7 @@
 import React from "react";
 import { ConnectButton } from "../wagmi/connect-button";
 import { cn } from "@/lib/utils";
+import { Logo } from "./logo";
 
 interface Props {
   className?: string;
@@ -12,12 +13,11 @@ export const Header: React.FC<
   return (
     <header
       className={cn(
-        "flex items-center justify-end p-2",
+        "flex items-center justify-between w-full py-2 px-6",
         className
       )}>
-      <div className='flex items-center gap-x-2'>
-        <ConnectButton />
-      </div>
+      <Logo />
+      <ConnectButton />
     </header>
   );
 };
