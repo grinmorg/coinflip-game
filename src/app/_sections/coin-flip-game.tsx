@@ -55,7 +55,7 @@ export const CoinFlipGameSection: React.FC<
 
   return (
     <div className={className}>
-      <div className='flex flex-col items-center justify-center gap-y-2'>
+      <div className='flex flex-col items-center justify-center gap-y-2 border rounded-xl max-w-xl mx-auto px-4'>
         <div className='flex items-center gap-x-2 px-2'>
           <div className='flex flex-col items-center gap-y-2'>
             <p
@@ -63,6 +63,8 @@ export const CoinFlipGameSection: React.FC<
                 "text-xl font-medium rounded border-2 border-orange-500 p-2 uppercase",
                 getWinnderSide() ===
                   "tails" &&
+                  // TODO: Убрать потом false и считать так же как и isNotSelected ниже по коду
+                  false &&
                   "bg-orange-500 text-white"
               )}>
               tails
@@ -76,6 +78,7 @@ export const CoinFlipGameSection: React.FC<
                   "tails" && !isPlaying
               }
               isLoading={isPlaying}
+              isNotSelected
             />
           </div>
           <button
@@ -98,6 +101,8 @@ export const CoinFlipGameSection: React.FC<
                 "text-xl font-medium rounded border-2 border-teal-500 p-2 uppercase",
                 getWinnderSide() ===
                   "heads" &&
+                  // TODO: Убрать потом false и считать так же как и isNotSelected ниже по коду
+                  false &&
                   "bg-teal-500 text-white"
               )}>
               heads

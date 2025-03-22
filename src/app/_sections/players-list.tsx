@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CoinFlipABI } from "@/lib/constants/abi-coin-flip";
 import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
 import { shortenAddress } from "@/lib/utils";
@@ -42,7 +43,14 @@ export const PlayersListSection: React.FC<
 
   // Отображаем загрузку или ошибку для списка игр
   if (isGamesLoading) {
-    return <div>Loading games...</div>;
+    return (
+      <div className='flex flex-col items-center'>
+        <GamesNotFoundImage className='h-[150px]' />
+        <p className='bg-accent px-2 py-1 rounded uppercase font-bold -mt-4'>
+          Loading games...
+        </p>
+      </div>
+    );
   }
 
   if (gamesError) {
@@ -57,9 +65,6 @@ export const PlayersListSection: React.FC<
   return (
     <div
       className={`flex flex-col gap-4 items-center ${className}`}>
-      <p className='text-2xl font-semibold'>
-        Games list:
-      </p>
       {activeGames.length > 0 ? (
         <>
           {activeGames.map((gameId) => (
@@ -129,24 +134,19 @@ const GameCard: React.FC<{
         "Ошибка при присоединении к игре:",
         error
       );
-      alert(
-        "Ошибка при присоединении к игре"
-      );
     }
   };
 
   // Отображаем загрузку или ошибку для деталей игры
   if (isLoading) {
-    return (
-      <div>Loading game details...</div>
-    );
+    return <SkeletonGameCard />;
   }
 
   if (error) {
     return (
       <div>
-        Error loading game details:{" "}
-        {error.message}
+        Error loading game details, try
+        later
       </div>
     );
   }
@@ -160,7 +160,7 @@ const GameCard: React.FC<{
   const playerOneAdddress = game[0][0];
 
   return (
-    <Card className='w-full max-w-md relative'>
+    <Card className='w-full max-w-xl relative'>
       {playerOneAdddress ===
         address && (
         <div className='absolute top-0 right-1/2 translate-x-1/2 bg-purple-500 text-white font-bold px-2 py-1 rounded-b-xl'>
@@ -223,3 +223,20 @@ const GameCard: React.FC<{
     </Card>
   );
 };
+
+function SkeletonGameCard() {
+  return (
+    <Card className='flex flex-col max-w-xl w-full min-h-[180px] gap-y-2'>
+      <CardContent>
+        <div className='flex justify-between gap-x-8 mb-8'>
+          <Skeleton className='h-8 w-12' />
+          <Skeleton className='h-8 w-12' />
+        </div>
+        <div className='flex justify-between gap-x-8'>
+          <Skeleton className='h-8 w-24' />
+          <Skeleton className='h-8 w-12' />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
