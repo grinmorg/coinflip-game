@@ -1,5 +1,6 @@
 "use client";
 
+import { GamesNotFoundImage } from "@/components/shared/svg/games-not-found";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +13,11 @@ import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
 import { shortenAddress } from "@/lib/utils";
 import React from "react";
 import { formatEther } from "viem";
-import { useReadContract } from "wagmi";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
 
 interface Props {
   className?: string;
@@ -55,12 +60,23 @@ export const PlayersListSection: React.FC<
       <p className='text-2xl font-semibold'>
         Games list:
       </p>
-      {activeGames.map((gameId) => (
-        <GameCard
-          key={gameId}
-          gameId={gameId}
-        />
-      ))}
+      {activeGames.length > 0 ? (
+        <>
+          {activeGames.map((gameId) => (
+            <GameCard
+              key={gameId}
+              gameId={gameId}
+            />
+          ))}
+        </>
+      ) : (
+        <div className='flex flex-col items-center'>
+          <GamesNotFoundImage className='h-[150px]' />
+          <p className='bg-accent px-2 py-1 rounded uppercase font-bold -mt-4'>
+            No active games found...
+          </p>
+        </div>
+      )}
     </div>
   );
 };
@@ -69,6 +85,14 @@ export const PlayersListSection: React.FC<
 const GameCard: React.FC<{
   gameId: bigint;
 }> = ({ gameId }) => {
+  const { address, isConnected } =
+    useAccount();
+
+  const {
+    writeContractAsync,
+    isPending: isTransactionPending,
+  } = useWriteContract();
+
   // Получаем детали игры по её ID
   const {
     data: game,
@@ -80,6 +104,36 @@ const GameCard: React.FC<{
     functionName: "getGameDetails",
     args: [gameId],
   });
+
+  // Присоединение к игре
+  const handleJoinGame = async ({
+    betAmount,
+    choice,
+  }: {
+    betAmount: bigint;
+    choice: bigint;
+  }) => {
+    if (!isConnected || !address)
+      return;
+    try {
+      await writeContractAsync({
+        abi: CoinFlipABI,
+        address:
+          CONTRACT_COIN_FLIP_ADDRESS,
+        functionName: "joinGame",
+        value: betAmount,
+        args: [gameId, choice],
+      });
+    } catch (error) {
+      console.error(
+        "Ошибка при присоединении к игре:",
+        error
+      );
+      alert(
+        "Ошибка при присоединении к игре"
+      );
+    }
+  };
 
   // Отображаем загрузку или ошибку для деталей игры
   if (isLoading) {
@@ -103,8 +157,16 @@ const GameCard: React.FC<{
     );
   }
 
+  const playerOneAdddress = game[0][0];
+
   return (
-    <Card className='w-full max-w-md'>
+    <Card className='w-full max-w-md relative'>
+      {playerOneAdddress ===
+        address && (
+        <div className='absolute top-0 right-1/2 translate-x-1/2 bg-purple-500 text-white font-bold px-2 py-1 rounded-b-xl'>
+          Your game
+        </div>
+      )}
       <CardHeader className='pb-2'>
         <div className='flex justify-between items-center gap-x-4'>
           <CardTitle className='text-sm font-medium rounded border-2 border-orange-500 p-2'>
@@ -121,7 +183,7 @@ const GameCard: React.FC<{
             <p className='font-semibold'>
               Player 1:{" "}
               {shortenAddress(
-                game[0][0]
+                playerOneAdddress
               )}
             </p>
             <p className='text-sm text-muted-foreground'>
@@ -136,9 +198,26 @@ const GameCard: React.FC<{
                 : "Tails"}
             </p>
           </div>
-          <Button size='sm'>
-            Join
-          </Button>
+          {isConnected && (
+            <Button
+              disabled={
+                isTransactionPending ||
+                playerOneAdddress ===
+                  address
+              }
+              onClick={() =>
+                handleJoinGame({
+                  betAmount: game[2],
+                  choice:
+                    game[1][0] === 0n
+                      ? 1n
+                      : 0n,
+                })
+              }
+              size='sm'>
+              Join
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

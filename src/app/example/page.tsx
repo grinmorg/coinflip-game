@@ -345,9 +345,11 @@ export default function Example() {
                       </div>
                     </RadioGroup>
                     <Button
-                      onClick={
-                        handleJoinGame
-                      }
+                      onClick={() => {
+                        // TODO: Подставлять правильную сумму
+                        // setBetAmount();
+                        handleJoinGame();
+                      }}
                       disabled={
                         isTransactionPending
                       }>
