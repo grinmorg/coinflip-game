@@ -20,7 +20,9 @@ import {
   cn,
   shortenAddress,
 } from "@/lib/utils";
-import React from "react";
+import React, {
+  useEffect,
+} from "react";
 import { formatEther } from "viem";
 import {
   useAccount,
@@ -39,6 +41,13 @@ export const PlayersListSection: React.FC<
   const { address } = useAccount();
 
   const [
+    activeGamesList,
+    setActiveGamesList,
+  ] = React.useState<bigint[] | null>(
+    null
+  );
+
+  const [
     currentUserActiveGames,
     setCurrentUserActiveGames,
   ] = React.useState<bigint[] | null>(
@@ -46,11 +55,9 @@ export const PlayersListSection: React.FC<
   );
 
   // Получаем список активных игр
-  let {
+  const {
     data: activeGames = [],
-    // eslint-disable-next-line prefer-const
     isLoading: isGamesLoading,
-    // eslint-disable-next-line prefer-const
     error: gamesError,
   } = useReadContract({
     abi: CoinFlipABI,
@@ -60,6 +67,17 @@ export const PlayersListSection: React.FC<
       refetchInterval: 60 * 1000, // Автоматическое обновление каждую минуту
     },
   });
+
+  useEffect(() => {
+    if (
+      activeGames &&
+      activeGames.length
+    ) {
+      setActiveGamesList(
+        Array.from(activeGames)
+      );
+    }
+  }, [activeGames]);
 
   // Игра началась
   useWatchContractEvent({
@@ -85,10 +103,12 @@ export const PlayersListSection: React.FC<
 
         if (findedGameId) {
           // Фильтруем игры
-          activeGames =
-            activeGames.filter(
+          setActiveGamesList((prev) => {
+            if (!prev) return null; // Если prev === null, возвращаем null
+            return prev.filter(
               (item) => item !== gameId
-            );
+            ); // Фильтруем массив
+          });
 
           // Показываем активную
           setCurrentUserActiveGames(
@@ -127,35 +147,37 @@ export const PlayersListSection: React.FC<
     );
   }
 
+  if (activeGames.length <= 0) {
+    return (
+      <div className='flex flex-col items-center'>
+        <GamesNotFoundImage className='h-[150px]' />
+        <p className='bg-accent px-2 py-1 rounded uppercase font-bold -mt-4'>
+          No active games found...
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`grid grid-cols-3 gap-x-4 gap-y-2 items-center ${className}`}>
-      {activeGames.length > 0 ? (
-        <>
-          {currentUserActiveGames?.map(
-            (gameId) => (
-              <GameCard
-                key={gameId}
-                gameId={gameId}
-                isActiveGame
-              />
-            )
-          )}
+      className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-center ${className}`}>
+      {currentUserActiveGames?.map(
+        (gameId) => (
+          <GameCard
+            key={gameId}
+            gameId={gameId}
+            isActiveGame
+          />
+        )
+      )}
 
-          {activeGames.map((gameId) => (
-            <GameCard
-              key={gameId}
-              gameId={gameId}
-            />
-          ))}
-        </>
-      ) : (
-        <div className='flex flex-col items-center'>
-          <GamesNotFoundImage className='h-[150px]' />
-          <p className='bg-accent px-2 py-1 rounded uppercase font-bold -mt-4'>
-            No active games found...
-          </p>
-        </div>
+      {activeGamesList?.map(
+        (gameId) => (
+          <GameCard
+            key={gameId}
+            gameId={gameId}
+          />
+        )
       )}
     </div>
   );
@@ -171,10 +193,8 @@ const GameCard: React.FC<{
 }) => {
   const { address, isConnected } =
     useAccount();
-
   const { calcPriceInUSD } =
     useCalcPrice();
-
   const {
     writeContractAsync,
     isPending: isTransactionPending,
@@ -191,8 +211,6 @@ const GameCard: React.FC<{
     functionName: "getGameDetails",
     args: [gameId],
   });
-
-  console.log(game, isActiveGame);
 
   // Присоединение к игре
   const handleJoinGame = async ({
@@ -222,74 +240,77 @@ const GameCard: React.FC<{
   };
 
   // Отображаем загрузку или ошибку для деталей игры
-  if (isLoading) {
+  if (isLoading)
     return <SkeletonGameCard />;
-  }
-
-  if (error) {
+  if (error)
     return (
       <div>
         Error loading game details, try
         later
       </div>
     );
-  }
-
-  if (!game) {
+  if (!game)
     return (
       <div>No game data found.</div>
     );
-  }
 
   const playerOneAdddress = game[0][0];
   const playerTwoAdddress = game[0][1];
   const betAmount = game[2];
 
-  const getShortenedAddressFirstPlayer =
-    () => {
-      console.log(playerOneAdddress);
+  // Определение текущего пользователя
+  const isCurrentUserGame =
+    address === playerOneAdddress ||
+    address === playerTwoAdddress;
 
-      if (
-        playerOneAdddress !=
-        EMPTY_ADDRESS
-      ) {
-        return (
-          game[1][1] ===
-            PlayerSide.TAILS &&
-          shortenAddress(
-            playerOneAdddress
-          )
-        );
-      }
+  // Отображение имени игрока
+  const getPlayerName = (
+    playerAddress: string
+  ) => {
+    return playerAddress === address
+      ? "You"
+      : shortenAddress(playerAddress);
+  };
 
-      return (
-        game[1][0] ===
-          PlayerSide.TAILS &&
-        shortenAddress(
-          playerTwoAdddress
-        )
-      );
-    };
+  // Определение сторон игроков
+  const getPlayerSide = (
+    playerAddress: string,
+    choice: bigint
+  ): string => {
+    if (playerAddress === EMPTY_ADDRESS)
+      return "Empty";
+    return choice === PlayerSide.HEADS
+      ? "HEADS"
+      : "TAILS";
+  };
 
-  const getShortenedAddressSecondPlayer =
-    () => {
-      if (
-        playerTwoAdddress !=
-        EMPTY_ADDRESS
-      ) {
-        return (
-          game[1][1] ===
-            PlayerSide.HEADS &&
-          shortenAddress(
-            playerTwoAdddress
-          )
-        );
-      }
+  const playerOneSide = getPlayerSide(
+    playerOneAdddress,
+    game[1][0]
+  );
+  const playerTwoSide = getPlayerSide(
+    playerTwoAdddress,
+    game[1][1]
+  );
 
-      return shortenAddress(
+  const getSidePlayer = (
+    side: string
+  ): string => {
+    if (playerOneSide === side)
+      return getPlayerName(
         playerOneAdddress
       );
-    };
+    if (playerTwoSide === side)
+      return getPlayerName(
+        playerTwoAdddress
+      );
+    return "";
+  };
+
+  const headsPlayer =
+    getSidePlayer("HEADS");
+  const tailsPlayer =
+    getSidePlayer("TAILS");
 
   return (
     <Card
@@ -299,116 +320,98 @@ const GameCard: React.FC<{
           "shadow-amber-300 shadow animate-pulse duration-[5000ms]"
       )}>
       <CardContent>
-        <div className='flex items-center gap-x-2'>
+        <div className='flex items-start gap-x-2'>
+          {/* Сторона TAILS */}
           <div className='flex flex-col items-center gap-y-2'>
             <p
               className={cn(
                 "text-xl font-medium rounded border-2 border-orange-500 p-2 uppercase",
-                // getWinnderSide() ===
-                //   "tails" &&
-                // TODO: Убрать потом false и считать так же как и isNotSelected ниже по коду
-                false &&
+                tailsPlayer &&
                   "bg-orange-500 text-white"
               )}>
               tails
             </p>
             <UserCard
               className={cn(
-                !getShortenedAddressFirstPlayer() &&
+                !tailsPlayer &&
+                  !isCurrentUserGame &&
                   "cursor-pointer",
                 isTransactionPending &&
-                  !getShortenedAddressFirstPlayer() &&
+                  !tailsPlayer &&
                   "pointer-events-none cursor-not-allowed opacity-30"
               )}
-              username={getShortenedAddressFirstPlayer()}
-              isWin={
-                false
-                // sideToLandOn ===
-                //   "tails" && !isPlaying
-              }
-              isLoading={
-                true
-                // isPlaying
-              }
+              username={tailsPlayer}
+              isWin={false}
+              isLoading={true}
               isNotSelected={
-                !getShortenedAddressFirstPlayer()
+                !tailsPlayer
               }
               onClick={() =>
-                !getShortenedAddressFirstPlayer() &&
+                !tailsPlayer &&
+                !isCurrentUserGame &&
                 handleJoinGame({
                   betAmount,
                   choice:
-                    game[1][0] ===
-                    PlayerSide.HEADS
-                      ? PlayerSide.TAILS
-                      : PlayerSide.HEADS,
+                    PlayerSide.TAILS,
                 })
               }
             />
           </div>
 
+          {/* Анимация подбрасывания монеты */}
           <div className='max-w-[200px] sm:max-w-[400px] sm:max-h-[400px] overflow-hidden'>
             <CoinFlip
-              triggerFlip={
-                true
-                // flipTrigger
-              }
-              // onComplete={
-              //   handleComplete
-              // }
+              triggerFlip={true}
             />
           </div>
+
+          {/* Сторона HEADS */}
           <div className='flex flex-col items-center gap-y-2'>
             <p
               className={cn(
                 "text-xl font-medium rounded border-2 border-teal-500 p-2 uppercase",
-                // getWinnderSide() ===
-                //   "heads" &&
-                // TODO: Убрать потом false и считать так же как и isNotSelected ниже по коду
-                false &&
+                headsPlayer &&
                   "bg-teal-500 text-white"
               )}>
               heads
             </p>
             <UserCard
               className={cn(
-                !getShortenedAddressSecondPlayer() &&
+                !headsPlayer &&
+                  !isCurrentUserGame &&
                   "cursor-pointer",
                 isTransactionPending &&
-                  !getShortenedAddressSecondPlayer() &&
+                  !headsPlayer &&
                   "pointer-events-none opacity-30"
               )}
-              username={getShortenedAddressSecondPlayer()}
-              isWin={
-                false
-                // sideToLandOn ===
-                //   "heads" && !isPlaying
-              }
+              username={headsPlayer}
+              isWin={false}
               isLoading={true}
               isNotSelected={
-                !getShortenedAddressSecondPlayer()
+                !headsPlayer
               }
               onClick={() =>
-                !getShortenedAddressSecondPlayer() &&
+                !headsPlayer &&
+                !isCurrentUserGame &&
                 handleJoinGame({
                   betAmount,
                   choice:
-                    game[1][0] ===
-                    PlayerSide.HEADS
-                      ? PlayerSide.TAILS
-                      : PlayerSide.HEADS,
+                    PlayerSide.HEADS,
                 })
               }
             />
           </div>
         </div>
+
+        {/* Бейдж "Your game" */}
         {playerOneAdddress ===
           address && (
-          <div className='absolute top-0 right-1/2 translate-x-1/2 bg-purple-500 text-white font-bold px-2 py-1 rounded-b-xl'>
+          <div className='absolute top-0 right-1/2 translate-x-1/2 bg-accent text-white font-bold px-2 py-1 rounded-b-xl'>
             Your game
           </div>
         )}
 
+        {/* Отображение суммы ставки */}
         {betAmount && (
           <div className='absolute bottom-0 right-1/2 translate-x-1/2 bg-accent text-white font-bold px-2 py-1 rounded-t-xl'>
             BET:{" "}
