@@ -1,6 +1,7 @@
 import {
   cookieStorage,
   createStorage,
+  webSocket,
 } from "wagmi";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { sepolia } from "@reown/appkit/networks";
@@ -26,6 +27,11 @@ export const wagmiAdapter =
     ssr: true,
     projectId,
     networks,
+    transports: {
+      [sepolia.id]: webSocket(
+        "wss://ethereum-sepolia-rpc.publicnode.com"
+      ),
+    },
   });
 
 export const config =

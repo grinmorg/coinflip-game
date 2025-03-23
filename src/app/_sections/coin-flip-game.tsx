@@ -1,11 +1,14 @@
 "use client";
 import { CoinFlip } from "@/components/animations/coin-flip";
 import { UserCard } from "@/components/game/user-card";
+import { CoinFlipABI } from "@/lib/constants/abi-coin-flip";
+import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
 import {
   cn,
   shortenAddress,
 } from "@/lib/utils";
 import React, { useState } from "react";
+import { useWatchContractEvent } from "wagmi";
 
 interface Props {
   className?: string;
@@ -22,6 +25,52 @@ export const CoinFlipGameSection: React.FC<
   ] = useState<"heads" | "tails">(
     "tails"
   );
+
+  // const [
+  //   currentGameInfo,
+  //   setCurrentGameInfo,
+  // ] = useState<Log | null>(null);
+
+  // Игра началась
+  useWatchContractEvent({
+    abi: CoinFlipABI,
+    address: CONTRACT_COIN_FLIP_ADDRESS,
+    eventName: "GameJoined",
+    onLogs(logs) {
+      console.log("Game joined", logs);
+
+      const playerSecond =
+        logs[0].args.player2;
+      console.log(playerSecond);
+    },
+  });
+
+  // Победитель определён
+  useWatchContractEvent({
+    abi: CoinFlipABI,
+    address: CONTRACT_COIN_FLIP_ADDRESS,
+    eventName: "GameResolved",
+    onLogs(logs) {
+      console.log("GameResolved", logs);
+      const gameId =
+        logs[0].args.gameId;
+      const winner =
+        logs[0].args.winner;
+      const result =
+        logs[0].args.result;
+      const amount =
+        logs[0].args.amount;
+      console.log(
+        gameId,
+        winner,
+        result,
+        amount
+      );
+
+      // setCurrentGameInfo();
+    },
+  });
+
   const [isPlaying, setIsPlaying] =
     useState<boolean>(false);
 
