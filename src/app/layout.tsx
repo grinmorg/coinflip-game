@@ -11,7 +11,6 @@ import WagmiContextProvider from "@/context/wagmi/provider";
 import { Header } from "@/components/layout/header";
 import { headers } from "next/headers";
 import { ActualPriceContextProvider } from "@/context/actual-price-context";
-import { ActualEthPrice } from "@/components/shared/actual-eth-price";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,8 +46,6 @@ export default async function RootLayout({
             cookies={cookies}>
             <QueryClientProvider>
               <ActualPriceContextProvider>
-                <ActualEthPrice className='fixed top-0 left-1/2 -translate-x-1/2 z-50' />
-
                 <Header />
                 {children}
               </ActualPriceContextProvider>

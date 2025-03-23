@@ -4,10 +4,11 @@ import React from "react";
 
 interface Props {
   className?: string;
-  username: string;
+  username: string | false;
   isWin: boolean;
   isLoading: boolean;
   isNotSelected?: boolean;
+  onClick?: () => void;
 }
 
 export const UserCard: React.FC<
@@ -17,6 +18,7 @@ export const UserCard: React.FC<
   isWin,
   isLoading,
   isNotSelected = false,
+  onClick,
   className,
 }) => {
   return (
@@ -24,7 +26,8 @@ export const UserCard: React.FC<
       className={cn(
         "flex flex-col items-center justify-center",
         className
-      )}>
+      )}
+      onClick={onClick}>
       <div
         className={cn(
           "rounded-full bg-accent flex items-center justify-center sm:w-32 w-16 sm:h-32 h-16 relative",
@@ -48,7 +51,7 @@ export const UserCard: React.FC<
         <UserIcon className='text-white sm:w-16 w-8 sm:h-16 h-8' />
       </div>
 
-      {!isNotSelected && (
+      {!isNotSelected && username && (
         <p className='font-bold sm:text-base text-xs'>
           {username}
         </p>

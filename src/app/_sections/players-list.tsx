@@ -1,22 +1,31 @@
 "use client";
 
+import { CoinFlip } from "@/components/animations/coin-flip";
+import { UserCard } from "@/components/game/user-card";
+import { COINS } from "@/components/shared/svg/coins";
 import { GamesNotFoundImage } from "@/components/shared/svg/games-not-found";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CoinFlipABI } from "@/lib/constants/abi-coin-flip";
-import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
-import { shortenAddress } from "@/lib/utils";
+import {
+  CONTRACT_COIN_FLIP_ADDRESS,
+  EMPTY_ADDRESS,
+} from "@/lib/constants/contracts";
+import useCalcPrice from "@/lib/hooks/use-calc-price";
+import { PlayerSide } from "@/lib/types";
+import {
+  cn,
+  shortenAddress,
+} from "@/lib/utils";
 import React from "react";
 import { formatEther } from "viem";
 import {
   useAccount,
   useReadContract,
+  useWatchContractEvent,
   useWriteContract,
 } from "wagmi";
 
@@ -27,10 +36,21 @@ interface Props {
 export const PlayersListSection: React.FC<
   Props
 > = ({ className }) => {
+  const { address } = useAccount();
+
+  const [
+    currentUserActiveGames,
+    setCurrentUserActiveGames,
+  ] = React.useState<bigint[] | null>(
+    null
+  );
+
   // Получаем список активных игр
-  const {
+  let {
     data: activeGames = [],
+    // eslint-disable-next-line prefer-const
     isLoading: isGamesLoading,
+    // eslint-disable-next-line prefer-const
     error: gamesError,
   } = useReadContract({
     abi: CoinFlipABI,
@@ -38,6 +58,51 @@ export const PlayersListSection: React.FC<
     functionName: "getActiveGames",
     query: {
       refetchInterval: 60 * 1000, // Автоматическое обновление каждую минуту
+    },
+  });
+
+  // Игра началась
+  useWatchContractEvent({
+    abi: CoinFlipABI,
+    address: CONTRACT_COIN_FLIP_ADDRESS,
+    eventName: "GameJoined",
+    onLogs(logs) {
+      console.log("Game joined", logs);
+
+      const playerSecond =
+        logs[0].args.player2;
+
+      const gameId =
+        logs[0].args.gameId;
+
+      // TODO: Так же надо проверить и первого игрока
+      if (playerSecond == address) {
+        // Если текущий игрок это второй участник то надо показать в начале списка игр
+        const findedGameId =
+          activeGames.find(
+            (item) => item === gameId
+          );
+
+        if (findedGameId) {
+          // Фильтруем игры
+          activeGames =
+            activeGames.filter(
+              (item) => item !== gameId
+            );
+
+          // Показываем активную
+          setCurrentUserActiveGames(
+            (prev) => {
+              const newSet = new Set(
+                prev || []
+              );
+              newSet.add(findedGameId);
+              return Array.from(newSet);
+            }
+          );
+        }
+      }
+      console.log(playerSecond);
     },
   });
 
@@ -64,9 +129,19 @@ export const PlayersListSection: React.FC<
 
   return (
     <div
-      className={`flex flex-col gap-4 items-center ${className}`}>
+      className={`grid grid-cols-3 gap-x-4 gap-y-2 items-center ${className}`}>
       {activeGames.length > 0 ? (
         <>
+          {currentUserActiveGames?.map(
+            (gameId) => (
+              <GameCard
+                key={gameId}
+                gameId={gameId}
+                isActiveGame
+              />
+            )
+          )}
+
           {activeGames.map((gameId) => (
             <GameCard
               key={gameId}
@@ -89,9 +164,16 @@ export const PlayersListSection: React.FC<
 // Компонент для отображения карточки игры
 const GameCard: React.FC<{
   gameId: bigint;
-}> = ({ gameId }) => {
+  isActiveGame?: boolean;
+}> = ({
+  gameId,
+  isActiveGame = false,
+}) => {
   const { address, isConnected } =
     useAccount();
+
+  const { calcPriceInUSD } =
+    useCalcPrice();
 
   const {
     writeContractAsync,
@@ -109,6 +191,8 @@ const GameCard: React.FC<{
     functionName: "getGameDetails",
     args: [gameId],
   });
+
+  console.log(game, isActiveGame);
 
   // Присоединение к игре
   const handleJoinGame = async ({
@@ -158,67 +242,190 @@ const GameCard: React.FC<{
   }
 
   const playerOneAdddress = game[0][0];
+  const playerTwoAdddress = game[0][1];
+  const betAmount = game[2];
+
+  const getShortenedAddressFirstPlayer =
+    () => {
+      console.log(playerOneAdddress);
+
+      if (
+        playerOneAdddress !=
+        EMPTY_ADDRESS
+      ) {
+        return (
+          game[1][1] ===
+            PlayerSide.TAILS &&
+          shortenAddress(
+            playerOneAdddress
+          )
+        );
+      }
+
+      return (
+        game[1][0] ===
+          PlayerSide.TAILS &&
+        shortenAddress(
+          playerTwoAdddress
+        )
+      );
+    };
+
+  const getShortenedAddressSecondPlayer =
+    () => {
+      if (
+        playerTwoAdddress !=
+        EMPTY_ADDRESS
+      ) {
+        return (
+          game[1][1] ===
+            PlayerSide.HEADS &&
+          shortenAddress(
+            playerTwoAdddress
+          )
+        );
+      }
+
+      return shortenAddress(
+        playerOneAdddress
+      );
+    };
 
   return (
-    <Card className='w-full max-w-xl relative'>
-      {playerOneAdddress ===
-        address && (
-        <div className='absolute top-0 right-1/2 translate-x-1/2 bg-purple-500 text-white font-bold px-2 py-1 rounded-b-xl'>
-          Your game
-        </div>
-      )}
-      <CardHeader className='pb-2'>
-        <div className='flex justify-between items-center gap-x-4'>
-          <CardTitle className='text-sm font-medium rounded border-2 border-orange-500 p-2'>
-            Tails
-          </CardTitle>
-          <CardTitle className='text-sm font-medium rounded border-2 border-teal-500 p-2'>
-            Heads
-          </CardTitle>
-        </div>
-      </CardHeader>
+    <Card
+      className={cn(
+        "w-full max-w-xl relative",
+        isActiveGame &&
+          "shadow-amber-300 shadow animate-pulse duration-[5000ms]"
+      )}>
       <CardContent>
-        <div className='flex items-center justify-between'>
-          <div>
-            <p className='font-semibold'>
-              Player 1:{" "}
-              {shortenAddress(
-                playerOneAdddress
+        <div className='flex items-center gap-x-2'>
+          <div className='flex flex-col items-center gap-y-2'>
+            <p
+              className={cn(
+                "text-xl font-medium rounded border-2 border-orange-500 p-2 uppercase",
+                // getWinnderSide() ===
+                //   "tails" &&
+                // TODO: Убрать потом false и считать так же как и isNotSelected ниже по коду
+                false &&
+                  "bg-orange-500 text-white"
+              )}>
+              tails
+            </p>
+            <UserCard
+              className={cn(
+                !getShortenedAddressFirstPlayer() &&
+                  "cursor-pointer",
+                isTransactionPending &&
+                  !getShortenedAddressFirstPlayer() &&
+                  "pointer-events-none cursor-not-allowed opacity-30"
               )}
-            </p>
-            <p className='text-sm text-muted-foreground'>
-              Bet:{" "}
-              {formatEther(game[2])} ETH
-            </p>
-            <p className='text-sm text-muted-foreground'>
-              Choice:{" "}
-              {/* TODO: Тут надо убедиться что 0 - это Heads */}
-              {game[1][0] === 0n
-                ? "Heads"
-                : "Tails"}
-            </p>
-          </div>
-          {isConnected && (
-            <Button
-              disabled={
-                isTransactionPending ||
-                playerOneAdddress ===
-                  address
+              username={getShortenedAddressFirstPlayer()}
+              isWin={
+                false
+                // sideToLandOn ===
+                //   "tails" && !isPlaying
+              }
+              isLoading={
+                true
+                // isPlaying
+              }
+              isNotSelected={
+                !getShortenedAddressFirstPlayer()
               }
               onClick={() =>
+                !getShortenedAddressFirstPlayer() &&
                 handleJoinGame({
-                  betAmount: game[2],
+                  betAmount,
                   choice:
-                    game[1][0] === 0n
-                      ? 1n
-                      : 0n,
+                    game[1][0] ===
+                    PlayerSide.HEADS
+                      ? PlayerSide.TAILS
+                      : PlayerSide.HEADS,
                 })
               }
-              size='sm'>
-              Join
-            </Button>
-          )}
+            />
+          </div>
+
+          <div className='max-w-[200px] sm:max-w-[400px] sm:max-h-[400px] overflow-hidden'>
+            <CoinFlip
+              triggerFlip={
+                true
+                // flipTrigger
+              }
+              // onComplete={
+              //   handleComplete
+              // }
+            />
+          </div>
+          <div className='flex flex-col items-center gap-y-2'>
+            <p
+              className={cn(
+                "text-xl font-medium rounded border-2 border-teal-500 p-2 uppercase",
+                // getWinnderSide() ===
+                //   "heads" &&
+                // TODO: Убрать потом false и считать так же как и isNotSelected ниже по коду
+                false &&
+                  "bg-teal-500 text-white"
+              )}>
+              heads
+            </p>
+            <UserCard
+              className={cn(
+                !getShortenedAddressSecondPlayer() &&
+                  "cursor-pointer",
+                isTransactionPending &&
+                  !getShortenedAddressSecondPlayer() &&
+                  "pointer-events-none opacity-30"
+              )}
+              username={getShortenedAddressSecondPlayer()}
+              isWin={
+                false
+                // sideToLandOn ===
+                //   "heads" && !isPlaying
+              }
+              isLoading={true}
+              isNotSelected={
+                !getShortenedAddressSecondPlayer()
+              }
+              onClick={() =>
+                !getShortenedAddressSecondPlayer() &&
+                handleJoinGame({
+                  betAmount,
+                  choice:
+                    game[1][0] ===
+                    PlayerSide.HEADS
+                      ? PlayerSide.TAILS
+                      : PlayerSide.HEADS,
+                })
+              }
+            />
+          </div>
         </div>
+        {playerOneAdddress ===
+          address && (
+          <div className='absolute top-0 right-1/2 translate-x-1/2 bg-purple-500 text-white font-bold px-2 py-1 rounded-b-xl'>
+            Your game
+          </div>
+        )}
+
+        {betAmount && (
+          <div className='absolute bottom-0 right-1/2 translate-x-1/2 bg-accent text-white font-bold px-2 py-1 rounded-t-xl'>
+            BET:{" "}
+            {formatEther(betAmount)}{" "}
+            <span className='inline-block w-2.5 h-4 -mb-0.5'>
+              <COINS.ETH />
+            </span>
+            <span>
+              {" "}
+              ~{" "}
+              {calcPriceInUSD(
+                formatEther(betAmount)
+              )}
+              $
+            </span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -10,7 +10,7 @@ import animationData from "./coin-animate.json";
 
 export const CoinFlip: React.FC<{
   triggerFlip: boolean;
-  onComplete: () => void;
+  onComplete?: () => void;
 }> = ({ triggerFlip, onComplete }) => {
   const lottieRef =
     useRef<LottieRefCurrentProps>(null);
