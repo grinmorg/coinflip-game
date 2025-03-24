@@ -23,6 +23,7 @@ import {
 import React, {
   useEffect,
 } from "react";
+import { toast } from "sonner";
 import { formatEther } from "viem";
 import {
   useAccount,
@@ -50,6 +51,13 @@ export const GamesListSection: React.FC<
   const [
     currentUserActiveGames,
     setCurrentUserActiveGames,
+  ] = React.useState<bigint[] | null>(
+    null
+  );
+
+  const [
+    winnersGames,
+    setWinnersGames,
   ] = React.useState<bigint[] | null>(
     null
   );
@@ -87,42 +95,111 @@ export const GamesListSection: React.FC<
     onLogs(logs) {
       console.log("Game joined", logs);
 
-      const playerSecond =
-        logs[0].args.player2;
-
       const gameId =
         logs[0].args.gameId;
 
-      // TODO: Так же надо проверить и первого игрока
-      if (playerSecond == address) {
-        // Если текущий игрок это второй участник то надо показать в начале списка игр
-        const findedGameId =
-          activeGames.find(
+      // Логика показа активной игры
+      const findedGameId =
+        activeGames.find(
+          (item) => item === gameId
+        );
+
+      if (findedGameId) {
+        // Фильтруем игры
+        setActiveGamesList((prev) => {
+          if (!prev) return null; // Если prev === null, возвращаем null
+          return prev.filter(
+            (item) => item !== gameId
+          ); // Фильтруем массив
+        });
+
+        // Показываем активную
+        setCurrentUserActiveGames(
+          (prev) => {
+            const newSet = new Set(
+              prev || []
+            );
+            newSet.add(findedGameId);
+            return Array.from(newSet);
+          }
+        );
+      }
+    },
+  });
+
+  // Победитель определён
+  useWatchContractEvent({
+    abi: CoinFlipABI,
+    address: CONTRACT_COIN_FLIP_ADDRESS,
+    eventName: "GameResolved",
+    onLogs(logs) {
+      console.log("GameResolved", logs);
+      const gameId =
+        logs[0].args.gameId;
+      const winner =
+        logs[0].args.winner;
+      // const result =
+      //   logs[0].args.result;
+      // const amount =
+      //   logs[0].args.amount;
+
+      if (winner === address) {
+        toast.success("You win!");
+      }
+
+      // Пытаемся найти данную игру
+      let findedGameId =
+        activeGames.find(
+          (item) => item === gameId
+        );
+
+      if (!findedGameId) {
+        findedGameId =
+          currentUserActiveGames?.find(
             (item) => item === gameId
           );
+      }
 
-        if (findedGameId) {
-          // Фильтруем игры
-          setActiveGamesList((prev) => {
+      if (findedGameId) {
+        // Фильтруем игры
+        setActiveGamesList((prev) => {
+          if (!prev) return null; // Если prev === null, возвращаем null
+          return prev.filter(
+            (item) =>
+              item !== findedGameId
+          );
+        });
+
+        setCurrentUserActiveGames(
+          (prev) => {
             if (!prev) return null; // Если prev === null, возвращаем null
             return prev.filter(
-              (item) => item !== gameId
-            ); // Фильтруем массив
-          });
+              (item) =>
+                item !== findedGameId
+            );
+          }
+        );
 
-          // Показываем активную
-          setCurrentUserActiveGames(
-            (prev) => {
-              const newSet = new Set(
-                prev || []
-              );
-              newSet.add(findedGameId);
-              return Array.from(newSet);
-            }
+        // После удаления из основых - пушим в выигрышные
+        setWinnersGames((prev) => {
+          const newSet = new Set(
+            prev || []
           );
-        }
+          newSet.add(findedGameId);
+          return Array.from(newSet);
+        });
+
+        // Через 10 сек удаляем
+        setTimeout(() => {
+          setWinnersGames((prev) => {
+            if (!prev) return null; // Если prev === null, возвращаем null
+            return prev.filter(
+              (item) =>
+                item !== findedGameId
+            );
+          });
+        }, 10000);
       }
-      console.log(playerSecond);
     },
   });
 
@@ -161,6 +238,14 @@ export const GamesListSection: React.FC<
   return (
     <div
       className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-center ${className}`}>
+      {winnersGames?.map((gameId) => (
+        <GameCard
+          key={gameId}
+          gameId={gameId}
+          isActiveGame
+        />
+      ))}
+
       {currentUserActiveGames?.map(
         (gameId) => (
           <GameCard
@@ -212,6 +297,12 @@ const GameCard: React.FC<{
     args: [gameId],
   });
 
+  console.log(
+    "game: ",
+    game,
+    isActiveGame
+  );
+
   // Присоединение к игре
   const handleJoinGame = async ({
     betAmount,
@@ -257,6 +348,8 @@ const GameCard: React.FC<{
   const playerOneAdddress = game[0][0];
   const playerTwoAdddress = game[0][1];
   const betAmount = game[2];
+  const gameResolved = game[3];
+  const gameWinner = game[4];
 
   // Определение текущего пользователя
   const isCurrentUserGame =
@@ -341,8 +434,12 @@ const GameCard: React.FC<{
                   "pointer-events-none cursor-not-allowed opacity-30"
               )}
               username={tailsPlayer}
-              isWin={false}
-              isLoading={true}
+              isWin={
+                gameResolved &&
+                gameWinner ==
+                  PlayerSide.TAILS
+              }
+              isLoading={!gameResolved}
               isNotSelected={
                 !tailsPlayer
               }
@@ -385,8 +482,12 @@ const GameCard: React.FC<{
                   "pointer-events-none opacity-30"
               )}
               username={headsPlayer}
-              isWin={false}
-              isLoading={true}
+              isWin={
+                gameResolved &&
+                gameWinner ==
+                  PlayerSide.HEADS
+              }
+              isLoading={!gameResolved}
               isNotSelected={
                 !headsPlayer
               }
