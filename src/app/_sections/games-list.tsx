@@ -35,7 +35,7 @@ interface Props {
   className?: string;
 }
 
-export const PlayersListSection: React.FC<
+export const GamesListSection: React.FC<
   Props
 > = ({ className }) => {
   const { address } = useAccount();
