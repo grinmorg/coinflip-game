@@ -30,29 +30,29 @@ export const UserCard: React.FC<
       onClick={onClick}>
       <div
         className={cn(
-          "rounded-full bg-accent flex items-center justify-center sm:w-32 w-16 sm:h-32 h-16 relative",
+          "rounded-full bg-accent flex items-center justify-center lg:w-32 w-16 lg:h-32 h-16 relative",
           isNotSelected &&
             "bg-transparent border-dashed border-6 border-accent opacity-50"
         )}>
         {!isNotSelected && (
-          <div className='absolute bottom-0 sm:bottom-2 left-1/2 -translate-x-1/2'>
+          <div className='absolute bottom-0 lg:bottom-2 left-1/2 -translate-x-1/2'>
             {isWin && (
-              <p className='text-white font-bold sm:text-lg bg-orange-500 px-1 sm:px-2 rounded'>
+              <p className='text-white font-bold lg:text-lg bg-orange-500 px-1 lg:px-2 rounded'>
                 WIN
               </p>
             )}
             {isLoading && (
-              <p className='font-bold sm:text-lg bg-white px-1 sm:px-2 rounded animate-pulse'>
-                ...
+              <p className='font-bold lg:text-lg bg-white text-orange-500 px-1 lg:px-2 rounded animate-pulse'>
+                wait...
               </p>
             )}
           </div>
         )}
-        <UserIcon className='text-white sm:w-16 w-8 sm:h-16 h-8' />
+        <UserIcon className='text-white lg:w-16 w-8 lg:h-16 h-8' />
       </div>
 
       {!isNotSelected && username && (
-        <p className='font-bold sm:text-base text-xs'>
+        <p className='font-bold lg:text-base text-xs'>
           {username}
         </p>
       )}

@@ -405,6 +405,20 @@ const GameCard: React.FC<{
   const tailsPlayer =
     getSidePlayer("TAILS");
 
+  const showLoadingState =
+    !gameResolved &&
+    playerOneAdddress !==
+      EMPTY_ADDRESS &&
+    playerTwoAdddress !== EMPTY_ADDRESS;
+
+  const isWinnerTails =
+    gameResolved &&
+    gameWinner == PlayerSide.TAILS;
+
+  const isWinnerHeads =
+    gameResolved &&
+    gameWinner == PlayerSide.HEADS;
+
   return (
     <Card
       className={cn(
@@ -418,9 +432,9 @@ const GameCard: React.FC<{
           <div className='flex flex-col items-center gap-y-2'>
             <p
               className={cn(
-                "text-xl font-medium rounded border-2 border-orange-500 p-2 uppercase",
+                "lg:text-xl font-medium rounded border-2 border-dashed border-orange-500 p-2 uppercase",
                 tailsPlayer &&
-                  "bg-orange-500 text-white"
+                  "bg-orange-500 text-white border-solid"
               )}>
               tails
             </p>
@@ -434,12 +448,10 @@ const GameCard: React.FC<{
                   "pointer-events-none cursor-not-allowed opacity-30"
               )}
               username={tailsPlayer}
-              isWin={
-                gameResolved &&
-                gameWinner ==
-                  PlayerSide.TAILS
+              isWin={isWinnerTails}
+              isLoading={
+                showLoadingState
               }
-              isLoading={!gameResolved}
               isNotSelected={
                 !tailsPlayer
               }
@@ -456,7 +468,7 @@ const GameCard: React.FC<{
           </div>
 
           {/* Анимация подбрасывания монеты */}
-          <div className='max-w-[200px] sm:max-w-[400px] sm:max-h-[400px] overflow-hidden'>
+          <div className='max-w-[200px] lg:max-w-[400px] lg:max-h-[400px] overflow-hidden'>
             <CoinFlip
               triggerFlip={true}
             />
@@ -466,9 +478,9 @@ const GameCard: React.FC<{
           <div className='flex flex-col items-center gap-y-2'>
             <p
               className={cn(
-                "text-xl font-medium rounded border-2 border-teal-500 p-2 uppercase",
+                "lg:text-xl font-medium rounded border-2 border-dashed border-teal-500 p-2 uppercase",
                 headsPlayer &&
-                  "bg-teal-500 text-white"
+                  "bg-teal-500 text-white border-solid"
               )}>
               heads
             </p>
@@ -482,12 +494,10 @@ const GameCard: React.FC<{
                   "pointer-events-none opacity-30"
               )}
               username={headsPlayer}
-              isWin={
-                gameResolved &&
-                gameWinner ==
-                  PlayerSide.HEADS
+              isWin={isWinnerHeads}
+              isLoading={
+                showLoadingState
               }
-              isLoading={!gameResolved}
               isNotSelected={
                 !headsPlayer
               }
