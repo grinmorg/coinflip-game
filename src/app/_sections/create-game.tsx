@@ -122,7 +122,8 @@ export const CreateGameSection: React.FC<
             <Button
               onClick={handleCreateGame}
               disabled={
-                isTransactionPending
+                isTransactionPending ||
+                !isConnected
               }>
               {isTransactionPending
                 ? "Loading..."

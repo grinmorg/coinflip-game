@@ -6,9 +6,7 @@ import { GamesNotFoundImage } from "@/components/shared/svg/games-not-found";
 import { CoinFlipABI } from "@/lib/constants/abi-coin-flip";
 import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
 import { useQueryClient } from "@tanstack/react-query";
-import React, {
-  useEffect,
-} from "react";
+import React from "react";
 import { toast } from "sonner";
 import {
   useReadContract,
@@ -24,13 +22,6 @@ export const GamesListSection: React.FC<
 > = ({ className }) => {
   const queryClient = useQueryClient();
 
-  const [
-    activeGamesList,
-    setActiveGamesList,
-  ] = React.useState<bigint[] | null>(
-    null
-  );
-
   // Получаем список активных игр
   const {
     data: activeGames = [],
@@ -42,17 +33,6 @@ export const GamesListSection: React.FC<
     address: CONTRACT_COIN_FLIP_ADDRESS,
     functionName: "getActiveGames",
   });
-
-  useEffect(() => {
-    if (
-      activeGames &&
-      activeGames.length
-    ) {
-      setActiveGamesList(
-        Array.from(activeGames)
-      );
-    }
-  }, [activeGames]);
 
   // создали новую игру
   useWatchContractEvent({
@@ -83,83 +63,6 @@ export const GamesListSection: React.FC<
       });
     },
   });
-
-  // TODO: Перенести в last-games.tsx
-  // Победитель определён
-  // useWatchContractEvent({
-  //   abi: CoinFlipABI,
-  //   address: CONTRACT_COIN_FLIP_ADDRESS,
-  //   eventName: "GameResolved",
-  //   onLogs(logs) {
-  //     console.log("GameResolved", logs);
-  //     const gameId =
-  //       logs[0].args.gameId;
-  //     const winner =
-  //       logs[0].args.winner;
-  //     // const result =
-  //     //   logs[0].args.result;
-  //     // const amount =
-  //     //   logs[0].args.amount;
-
-  //     if (winner === address) {
-  //       toast.success("You win!");
-  //     }
-
-  //     // Пытаемся найти данную игру
-  //     let findedGameId =
-  //       activeGames.find(
-  //         (item) => item === gameId
-  //       );
-
-  //     if (!findedGameId) {
-  //       findedGameId =
-  //         currentUserActiveGames?.find(
-  //           (item) => item === gameId
-  //         );
-  //     }
-
-  //     if (findedGameId) {
-  //       // Фильтруем игры
-  //       setActiveGamesList((prev) => {
-  //         if (!prev) return null; // Если prev === null, возвращаем null
-  //         return prev.filter(
-  //           (item) =>
-  //             item !== findedGameId
-  //         );
-  //       });
-
-  //       setCurrentUserActiveGames(
-  //         (prev) => {
-  //           if (!prev) return null; // Если prev === null, возвращаем null
-  //           return prev.filter(
-  //             (item) =>
-  //               item !== findedGameId
-  //           );
-  //         }
-  //       );
-
-  //       // После удаления из основых - пушим в выигрышные
-  //       setWinnersGames((prev) => {
-  //         const newSet = new Set(
-  //           prev || []
-  //         );
-  //         newSet.add(findedGameId);
-  //         return Array.from(newSet);
-  //       });
-
-  //       // Через 10 сек удаляем
-  //       setTimeout(() => {
-  //         setWinnersGames((prev) => {
-  //           if (!prev) return null; // Если prev === null, возвращаем null
-  //           return prev.filter(
-  //             (item) =>
-  //               item !== findedGameId
-  //           );
-  //         });
-  //       }, 10000);
-  //     }
-  //   },
-  // });
 
   // Отображаем загрузку или ошибку для списка игр
   if (isGamesLoading) {
@@ -202,14 +105,12 @@ export const GamesListSection: React.FC<
       />
       <div
         className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-center ${className}`}>
-        {activeGamesList?.map(
-          (gameId) => (
-            <GameCard
-              key={gameId}
-              gameId={gameId}
-            />
-          )
-        )}
+        {activeGames?.map((gameId) => (
+          <GameCard
+            key={gameId}
+            gameId={gameId}
+          />
+        ))}
       </div>
     </section>
   );

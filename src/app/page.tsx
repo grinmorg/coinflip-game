@@ -1,4 +1,5 @@
 import { CreateGameSection } from "./_sections/create-game";
+import { GameStatsSection } from "./_sections/game-stats";
 import { GamesListSection } from "./_sections/games-list";
 import { LastGamesSection } from "./_sections/last-games";
 
@@ -10,7 +11,8 @@ export default function Home() {
           <LastGamesSection className='mb-8' />
           <CreateGameSection />
         </div>
-        <GamesListSection />
+        <GamesListSection className='mb-12' />
+        <GameStatsSection />
       </div>
     </main>
   );

@@ -33,6 +33,7 @@ export const LastGamesSection: React.FC<
   const queryClient = useQueryClient();
   const { address } = useAccount();
 
+  // TODO: Всегда пустой массив приходит
   // Получаем список активных игр
   const {
     data: gamesList = [],
@@ -42,7 +43,7 @@ export const LastGamesSection: React.FC<
   } = useReadContract({
     abi: CoinFlipABI,
     address: CONTRACT_COIN_FLIP_ADDRESS,
-    args: [0n, 10n], // offset, limit
+    args: [BigInt(0), BigInt(10)], // offset, limit
     functionName:
       "getCompletedGamesPaginated",
   });
@@ -68,9 +69,11 @@ export const LastGamesSection: React.FC<
     },
   });
 
-  if (gamesList.length <= 0) {
-    return null;
-  }
+  console.log("gamesList: ", gamesList);
+
+  // if (gamesList.length <= 0) {
+  //   return null;
+  // }
 
   return (
     <section className={className}>
@@ -84,8 +87,8 @@ export const LastGamesSection: React.FC<
         spaceBetween={20}
         slidesPerView={1}
         breakpoints={{
-          640: {
-            slidesPerView: 1.3,
+          0: {
+            slidesPerView: 1.15,
           },
           768: {
             slidesPerView: 2.4,
@@ -95,7 +98,7 @@ export const LastGamesSection: React.FC<
           },
         }}
         className='w-full'>
-        {gamesList.map((game) => (
+        {[6n, 8n].map((game) => (
           <SwiperSlide
             key={game}
             className='py-1 ml-0.5'>
