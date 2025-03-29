@@ -13,7 +13,7 @@ export const Logo: React.FC<Props> = ({
     <Link
       href='/'
       className={cn(
-        "font-bold uppercase text-2xl",
+        "font-bold uppercase sm:text-2xl",
         className
       )}>
       Coin Flip Game

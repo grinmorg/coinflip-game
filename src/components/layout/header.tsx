@@ -13,7 +13,7 @@ export const Header: React.FC<
   return (
     <header
       className={cn(
-        "flex items-center justify-between w-full py-2 px-6",
+        "flex items-center justify-between w-full py-2 px-3 sm:px-6",
         className
       )}>
       <Logo />

@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import React, {
   useEffect,
 } from "react";
+import { toast } from "sonner";
 import {
   useReadContract,
   useWatchContractEvent,
@@ -63,6 +64,9 @@ export const GamesListSection: React.FC<
       queryClient.invalidateQueries({
         queryKey: activeGamesQueryKey,
       });
+
+      // toast
+      toast.success("Game created!");
     },
   });
 
@@ -190,31 +194,23 @@ export const GamesListSection: React.FC<
   }
 
   return (
-    <div
-      className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-center ${className}`}>
-      {/* {currentUserActiveGames?.map(
-        (gameId) => (
-          <GameCard
-            key={gameId}
-            gameId={gameId}
-            isActiveGame
-          />
-        )
-      )} */}
+    <section>
       <Heading
         level='h2'
         text='Active games'
         highlight='Active'
       />
-
-      {activeGamesList?.map(
-        (gameId) => (
-          <GameCard
-            key={gameId}
-            gameId={gameId}
-          />
-        )
-      )}
-    </div>
+      <div
+        className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-center ${className}`}>
+        {activeGamesList?.map(
+          (gameId) => (
+            <GameCard
+              key={gameId}
+              gameId={gameId}
+            />
+          )
+        )}
+      </div>
+    </section>
   );
 };
