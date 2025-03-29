@@ -20,6 +20,7 @@ import {
   cn,
   shortenAddress,
 } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import React, {
   useEffect,
 } from "react";
@@ -39,6 +40,7 @@ interface Props {
 export const GamesListSection: React.FC<
   Props
 > = ({ className }) => {
+  const queryClient = useQueryClient();
   const { address } = useAccount();
 
   const [
@@ -67,6 +69,7 @@ export const GamesListSection: React.FC<
     data: activeGames = [],
     isLoading: isGamesLoading,
     error: gamesError,
+    queryKey: activeGamesQueryKey,
   } = useReadContract({
     abi: CoinFlipABI,
     address: CONTRACT_COIN_FLIP_ADDRESS,
@@ -86,6 +89,20 @@ export const GamesListSection: React.FC<
       );
     }
   }, [activeGames]);
+
+  // Игру создали новую
+  useWatchContractEvent({
+    abi: CoinFlipABI,
+    address: CONTRACT_COIN_FLIP_ADDRESS,
+    eventName: "GameCreated",
+    onLogs() {
+      // ревалидация списка игр
+      queryClient.invalidateQueries({
+        queryKey: activeGamesQueryKey,
+        refetchType: "all",
+      });
+    },
+  });
 
   // Игра началась
   useWatchContractEvent({
