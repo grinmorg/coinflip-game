@@ -16,7 +16,7 @@ export const Logo: React.FC<Props> = ({
         "font-bold uppercase text-2xl",
         className
       )}>
-      Flip Flap Game
+      Coin Flip Game
     </Link>
   );
 };

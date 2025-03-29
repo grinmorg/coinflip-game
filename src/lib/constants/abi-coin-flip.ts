@@ -5,22 +5,12 @@ export const CoinFlipABI = [
     inputs: [
       {
         internalType: "address",
-        name: "_vrfCoordinator",
+        name: "_platformFeeRecipient",
         type: "address",
       },
       {
-        internalType: "uint256",
-        name: "_subscriptionId",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes32",
-        name: "_keyHash",
-        type: "bytes32",
-      },
-      {
         internalType: "address",
-        name: "_platformFeeRecipient",
+        name: "_trustedSigner",
         type: "address",
       },
     ],
@@ -28,77 +18,49 @@ export const CoinFlipABI = [
     type: "constructor",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "have",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "want",
-        type: "address",
-      },
-    ],
-    name: "OnlyCoordinatorCanFulfill",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "have",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "coordinator",
-        type: "address",
-      },
-    ],
-    name: "OnlyOwnerOrCoordinator",
-    type: "error",
-  },
-  {
     inputs: [],
-    name: "ZeroAddress",
+    name: "ECDSAInvalidSignature",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "length",
+        type: "uint256",
+      },
+    ],
+    name: "ECDSAInvalidSignatureLength",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "s",
+        type: "bytes32",
+      },
+    ],
+    name: "ECDSAInvalidSignatureS",
     type: "error",
   },
   {
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "address",
-        name: "vrfCoordinator",
+        name: "recipient",
         type: "address",
-      },
-    ],
-    name: "CoordinatorSet",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "string",
-        name: "message",
-        type: "string",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "value",
+        name: "amount",
         type: "uint256",
       },
     ],
-    name: "Debug",
+    name: "FundsWithdrawn",
     type: "event",
   },
   {
@@ -140,6 +102,12 @@ export const CoinFlipABI = [
         internalType: "uint256",
         name: "gameId",
         type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "player1",
+        type: "address",
       },
       {
         indexed: true,
@@ -189,63 +157,6 @@ export const CoinFlipABI = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferRequested",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "gameId",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "requestId",
-        type: "uint256",
-      },
-    ],
-    name: "VRFRequested",
-    type: "event",
-  },
-  {
     inputs: [],
     name: "HEADS",
     outputs: [
@@ -282,13 +193,6 @@ export const CoinFlipABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "acceptOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -340,11 +244,6 @@ export const CoinFlipABI = [
         type: "uint256",
       },
       {
-        internalType: "uint256",
-        name: "vrfRequestId",
-        type: "uint256",
-      },
-      {
         internalType: "bool",
         name: "resolved",
         type: "bool",
@@ -361,6 +260,43 @@ export const CoinFlipABI = [
   {
     inputs: [],
     name: "getActiveGames",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getAvailableFunds",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "offset",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "limit",
+        type: "uint256",
+      },
+    ],
+    name: "getCompletedGamesPaginated",
     outputs: [
       {
         internalType: "uint256[]",
@@ -405,6 +341,45 @@ export const CoinFlipABI = [
         internalType: "uint256",
         name: "result",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bool",
+        name: "ascending",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "offset",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "limit",
+        type: "uint256",
+      },
+    ],
+    name: "getGamesSortedByBet",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "gameIds",
+        type: "uint256[]",
+      },
+      {
+        internalType: "address[]",
+        name: "player1Addresses",
+        type: "address[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "bets",
+        type: "uint256[]",
       },
     ],
     stateMutability: "view",
@@ -534,19 +509,6 @@ export const CoinFlipABI = [
   },
   {
     inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "platformFeeRecipient",
     outputs: [
       {
@@ -562,43 +524,21 @@ export const CoinFlipABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "requestId",
+        name: "gameId",
         type: "uint256",
       },
       {
-        internalType: "uint256[]",
-        name: "randomWords",
-        type: "uint256[]",
+        internalType: "uint256",
+        name: "result",
+        type: "uint256",
       },
-    ],
-    name: "rawFulfillRandomWords",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "s_vrfCoordinator",
-    outputs: [
       {
-        internalType:
-          "contract IVRFCoordinatorV2Plus",
-        name: "",
-        type: "address",
+        internalType: "bytes",
+        name: "signature",
+        type: "bytes",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_vrfCoordinator",
-        type: "address",
-      },
-    ],
-    name: "setCoordinator",
+    name: "resolveGame",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -649,16 +589,16 @@ export const CoinFlipABI = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "trustedSigner",
+    outputs: [
       {
         internalType: "address",
-        name: "to",
+        name: "",
         type: "address",
       },
     ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -708,19 +648,13 @@ export const CoinFlipABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "amount",
         type: "uint256",
       },
     ],
-    name: "vrfRequestToGame",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
+    name: "withdrawPlatformFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ] as const satisfies Abi;
