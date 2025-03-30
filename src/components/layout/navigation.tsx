@@ -27,7 +27,7 @@ export const Navigation: React.FC<
   const { isConnected } = useAccount();
   return (
     <nav className={cn(className)}>
-      <ul className='flex items-center gap-x-8'>
+      <ul className='flex items-center gap-x-4 sm:gap-x-8'>
         {items.map((i) => {
           if (
             i.onlyAuth &&
@@ -39,7 +39,7 @@ export const Navigation: React.FC<
             <li key={i.href}>
               <Link
                 href={i.href}
-                className='opacity-50 hover:opacity-100 transition font-semibold sm:text-xl uppercase'>
+                className='opacity-50 hover:opacity-100 transition font-semibold text-xs sm:text-xl uppercase'>
                 {i.label}
               </Link>
             </li>

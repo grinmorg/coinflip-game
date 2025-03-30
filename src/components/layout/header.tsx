@@ -17,7 +17,7 @@ export const Header: React.FC<
         "flex items-center justify-between w-full py-2 px-3 sm:px-6",
         className
       )}>
-      <Logo />
+      <Logo className='hidden sm:block' />
 
       <div className='flex items-center gap-x-2'>
         <Navigation />
