@@ -2,6 +2,7 @@ import React from "react";
 import { ConnectButton } from "../wagmi/connect-button";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
+import { Navigation } from "./navigation";
 
 interface Props {
   className?: string;
@@ -17,7 +18,11 @@ export const Header: React.FC<
         className
       )}>
       <Logo />
-      <ConnectButton />
+
+      <div className='flex items-center gap-x-2'>
+        <Navigation />
+        <ConnectButton />
+      </div>
     </header>
   );
 };
