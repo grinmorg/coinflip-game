@@ -71,9 +71,9 @@ export const LastGamesSection: React.FC<
 
   console.log("gamesList: ", gamesList);
 
-  // if (gamesList.length <= 0) {
-  //   return null;
-  // }
+  if (gamesList.length <= 0) {
+    return null;
+  }
 
   return (
     <section className={className}>
@@ -98,7 +98,7 @@ export const LastGamesSection: React.FC<
           },
         }}
         className='w-full'>
-        {[6n, 8n].map((game) => (
+        {gamesList.map((game) => (
           <SwiperSlide
             key={game}
             className='py-1 ml-0.5'>

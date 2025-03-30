@@ -458,13 +458,28 @@ export const CoinFlipABI = [
         name: "user",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "offset",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "limit",
+        type: "uint256",
+      },
     ],
-    name: "getUserGames",
+    name: "getUserGamesPaginated",
     outputs: [
       {
         internalType: "uint256[]",
         name: "",
         type: "uint256[]",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
