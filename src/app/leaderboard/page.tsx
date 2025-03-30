@@ -11,7 +11,7 @@ import { shortenAddress } from "@/lib/utils";
 import { CrownIcon } from "lucide-react";
 import { useReadContract } from "wagmi";
 
-export default function LeaderboardSection() {
+export default function LeaderboardPage() {
   // Получение лидерборда
   const {
     data: leaderboard = [[], []],
