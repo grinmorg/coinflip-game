@@ -5,6 +5,7 @@ import { Heading } from "@/components/shared/heading";
 import { GamesNotFoundImage } from "@/components/shared/svg/games-not-found";
 import { CoinFlipABI } from "@/lib/constants/abi-coin-flip";
 import { CONTRACT_COIN_FLIP_ADDRESS } from "@/lib/constants/contracts";
+import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { toast } from "sonner";
@@ -87,7 +88,11 @@ export const GamesListSection: React.FC<
 
   if (activeGames.length <= 0) {
     return (
-      <div className='flex flex-col items-center'>
+      <div
+        className={cn(
+          "flex flex-col items-center",
+          className
+        )}>
         <GamesNotFoundImage className='h-[150px]' />
         <p className='bg-accent px-2 py-1 rounded uppercase font-bold -mt-4'>
           No active games found...

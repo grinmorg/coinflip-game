@@ -184,7 +184,7 @@ export const GameCard: React.FC<
       className={cn(
         "w-full max-w-xl relative",
         isActiveGame &&
-          "shadow-amber-300 shadow animate-pulse duration-[5000ms]"
+          "shadow-amber-300 shadow"
       )}>
       <CardContent>
         <div className='flex items-start gap-x-2'>
