@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🪙 CoinFlip Game - On-Chain Heads or Tails
 
-## Getting Started
+![Game Screenshot](./public/screen.jpg)
 
-First, run the development server:
+A decentralized heads-or-tails game where players can compete against each other with cryptocurrency bets on the Ethereum blockchain (Sepolia Testnet).
+
+## 🌟 Features
+
+- 🏦 Real-money betting with cryptocurrency
+- 🔒 Fully transparent on-chain gameplay
+- 🤝 Player-vs-player matches
+- ⚡ Fast resolution with off-chain computation
+- 📜 EIP-712 signed results for security
+
+## 🚀 Live Demo
+
+Play now at: [https://coinflip-game-vert.vercel.app/](https://coinflip-game-vert.vercel.app/)  
+_(Currently only supports Sepolia Testnet)_
+
+## 📜 Smart Contract
+
+The game logic is powered by an Ethereum smart contract:  
+[View Contract Code](https://gist.github.com/grinmorg/e71cb69ebab6cfac07820008d9c0cb4f)
+
+## ⚙️ Backend System
+
+The resolution backend handles off-chain computation and on-chain result submission:  
+[Backend Repository](https://github.com/grinmorg/coinflip-game-resolve-backend)
+
+## 🛠️ How It Works
+
+1. **Player A** creates a game with a bet amount
+2. **Player B** joins the game with matching bet
+3. Both players submit their coin flip choice (Heads/Tails)
+4. Backend computes the random result off-chain
+5. Result is signed and submitted to the blockchain via EIP-712
+6. Winner receives both bets minus small platform fee
+
+## 💻 Tech Stack
+
+- **Frontend**: React.js (Next.js), Wagmi, Viem, shadcn/ui, Tailwind CSS
+- **Smart Contracts**: Solidity
+- **Backend**: Node.js (Nest.js), Viem
+- **Blockchain**: Ethereum (Sepolia Testnet)
+- **Security**: EIP-712 signed messages
+
+## 📦 Installation
+
+To run locally:
 
 ```bash
+git clone git@github.com:grinmorg/coinflip-game.git
+cd coinflip-game
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
